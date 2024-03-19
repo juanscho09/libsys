@@ -1,0 +1,58 @@
+version: "3"
+services:
+
+    # Backend (PHP)
+    back:
+        build:
+            context: .
+            dockerfile: ./docker/back/Dockerfile
+        container_name: "${PROJECT_NAME}_back"
+        tty: true
+        environment:
+            SERVICE_NAME: back
+        working_dir: /var/www/back
+        ports:
+            - "8080:80"
+        volumes:
+            - ./back/:/var/www/back
+            - ./back/public/:/var/www/html
+        networks:
+            - private
+
+    # Frontend
+    #front:
+    #    build:
+    #        context: .
+    #        dockerfile: ./docker/front/Dockerfile
+    #    container_name: "${PROJECT_NAME}_front"
+    #    working_dir: /usr/src/app/front
+    #    volumes: 
+    #        - ./front/:/usr/src/app/front 
+    #    ports: 
+    #        - '4200:4200' 
+    #    command: > 
+    #        bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
+    #    networks:
+    #        - private
+
+    # MySQL Service
+    mysql:
+        image: 'mysql/mysql-server:5.7.31'
+        container_name: "${PROJECT_NAME}_mysql"
+        tty: true
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DB}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_PASS_ROOT}
+            MYSQL_ROOT_HOST: '%'
+            SERVICE_NAME: mysql
+        volumes:
+            - ./docker/mysql/dbdata/:/var/lib/mysql-files/
+            - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+        networks:
+            - private
+
+networks:
+    private:
+        driver: bridge
