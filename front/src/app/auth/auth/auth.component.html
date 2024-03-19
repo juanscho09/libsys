@@ -1,0 +1,52 @@
+<mat-progress-spinner *ngIf="isLoading" diameter="50" mode="indeterminate"></mat-progress-spinner>
+<mat-sidenav-container class="example-container" >
+    
+    <mat-sidenav-content>
+        <div class="col-md-6 offset-md-3">
+            <div class="content mat-elevation-z8 justify-content-center">
+                <form [formGroup]="loginForm" (ngSubmit)="onFormSubmit()" class="example-form">
+
+                    <div class="login-form">
+                        <img class="avatar logo mat-elevation-z8 mt-5 " src="https://media.licdn.com/dms/image/C4D0BAQEwGfuIGjfbSA/company-logo_200_200/0/1675357745707/tec_solutions_network_logo?e=2147483647&v=beta&t=R5954FEuYtVcRhjald-ZTFSVZhSFiZDsP3jqYB6N5w0" alt="">
+                        <div class="mt-2">
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Email</mat-label>
+                                <input formControlName="email" matInput placeholder="demo@gmail.com" required>
+                                <div class="text-danger" *ngIf="loginForm.controls?.['email'].touched">
+                                    <mat-error *ngIf="loginForm.controls?.['email'].errors?.['required']">
+                                        Dato obligatorio
+                                    </mat-error>
+                                    <mat-error *ngIf="loginForm.controls?.['email'].errors?.['email']">
+                                        Debe tener el formato correcto
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-2">
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Password</mat-label>
+                                <input formControlName="password" matInput [type]="hide ? 'password' : 'text' " required>
+                                <button mat-icon-button matSuffix (click)="hide = !hide"
+                                    [attr.aria-label]="'Contraseña oculta'" [attr.aira-pressed]="hide">
+                                    <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                </button>
+                                <div class="text-danger" *ngIf="loginForm.controls?.['password'].touched">
+                                    <mat-error *ngIf="loginForm.controls?.['password'].errors?.['required']">
+                                        Dato obligatorio
+                                    </mat-error>
+                                    <mat-error *ngIf="loginForm.controls?.['password'].errors?.['minLength']">
+                                        Debe tener como mínimo 6 caracteres
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-12 d-flex justify-content-center mt-5">
+                            <button type="submit" class="btn btn-primary" >Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+

@@ -1,0 +1,52 @@
+<div style="margin:15px;">
+    <div style="display:flex;">
+        <mat-form-field appearance="fill" class="example-form-field">
+            <mat-label>Ordenar</mat-label>
+            <mat-select [formControl]="sortingControl">
+                <mat-option value="">-Seleccionar-</mat-option>
+                <mat-option value="title-asc">Titulo asc</mat-option>
+                <mat-option value="title-desc">Titulo desc</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="example-form-field">
+            <mat-label>Buscar</mat-label>
+            <input matInput type="text" [formControl]="searchControl">
+            <button matSuffix mat-icon-button aria-label="Clear" (click)="doSearch()">
+              <mat-icon>search</mat-icon>
+            </button>
+        </mat-form-field>
+        <mat-paginator class="example-form-field" 
+            [length]="totalCount" 
+            [pageSize]="pageSize" 
+            [pageSizeOptions]="[5, 10, 15, 20]" 
+            [pageIndex]="pageIndex" 
+            (page)="handlePageEvent($event)" 
+            aria-label="Select page">
+        </mat-paginator>
+        <button mat-raised-button color="primary" (click)="bookCreate()">
+            Agregar libro
+        </button>
+    </div>
+</div>
+
+<div class="app-wrapper">
+    
+    <mat-card class="example-card" *ngFor="let item of books">
+        <mat-card-header class="example-card-header">
+          <mat-card-title class="example-card-title">{{item.title}}</mat-card-title>
+          <mat-card-subtitle>Autor: {{item.author}}</mat-card-subtitle>
+        </mat-card-header>
+        <img mat-card-image class="example-card-image" src="{{item.cover_image}}" alt="Photo of a Shiba Inu">
+        <mat-card-footer class="example-card-footer">
+            <button mat-icon-button color="primary" aria-label="Prestar libro" (click)="openLoanBookDialog(item)">
+                <mat-icon>playlist_add</mat-icon>
+            </button>
+            <a routerLink="/dashboard/book/bookEdit/{{item.id}}" >
+                <mat-icon>border_color</mat-icon>
+            </a>
+            <button mat-icon-button color="warn" aria-label="Prestar libro" (click)="openConfirmDialog(item.id)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </mat-card-footer>
+      </mat-card>
+</div>

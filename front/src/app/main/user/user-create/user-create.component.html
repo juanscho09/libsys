@@ -1,0 +1,73 @@
+<div mat-dialog-title>
+    <h1>Formulario de Usuario</h1>
+</div>
+
+<mat-progress-spinner *ngIf="isLoading" diameter="50" mode="indeterminate"></mat-progress-spinner>
+
+<form [formGroup]="userForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Nombre</mat-label>
+                <input matInput type="text" formControlName="name" placeholder="Juan" required>
+                <div class="text-danger" *ngIf="userForm.controls?.['name'].touched">
+                    <mat-error *ngIf="userForm.controls?.['name'].errors?.['required']">
+                        Dato obligatorio
+                    </mat-error>
+                </div>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Apellido</mat-label>
+                <input matInput type="text"  formControlName="lastname" placeholder="Chinga Torres" required>
+                <div class="text-danger" *ngIf="userForm.controls?.['lastname'].touched">
+                    <mat-error *ngIf="userForm.controls?.['lastname'].errors?.['required']">
+                        Dato obligatorio
+                    </mat-error>
+                </div>
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="email" placeholder="email@prueba.com" required>
+                <div class="text-danger" *ngIf="userForm.controls?.['email'].touched">
+                    <mat-error *ngIf="userForm.controls?.['email'].errors?.['required']">
+                        Dato obligatorio
+                    </mat-error>
+                    <mat-error *ngIf="userForm.controls?.['email'].errors?.['email']">
+                        Debe tener el formato correcto
+                    </mat-error>
+                </div>
+            </mat-form-field>
+            <!--<mat-checkbox class="example-margin" *ngIf="data" (change)="togglePasswordVisibility()">Actualizar password</mat-checkbox>-->
+            <mat-form-field appearance="outline" *ngIf="!data">
+                <mat-label>Password</mat-label>
+                <input matInput type="password" formControlName="password" placeholder="Poner la contraseña" required>
+                <div class="text-danger" *ngIf="userForm.controls?.['password'].touched">
+                    <mat-error *ngIf="userForm.controls?.['password'].errors?.['required']">
+                        Dato obligatorio
+                    </mat-error>
+                </div>
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field appearance="outline" *ngIf="!data">
+                <mat-label>Confirmar password</mat-label>
+                <input matInput type="password" formControlName="password_confirmation" placeholder="Confirme su contraseña" required>
+                <div class="text-danger" *ngIf="userForm.controls?.['password_confirmation'].touched">
+                    <mat-error *ngIf="userForm.controls?.['password_confirmation'].errors?.['required']">
+                        Dato obligatorio
+                    </mat-error>
+                    <mat-error *ngIf="userForm.hasError('mismatch')">
+                        Las contraseñas no coinciden
+                    </mat-error>
+                </div>
+            </mat-form-field>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-raised-button [mat-dialog-close]="false">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit">{{ data ? "Actualizar" : "Guardar" }}
+        </button>
+    </div>
+</form>

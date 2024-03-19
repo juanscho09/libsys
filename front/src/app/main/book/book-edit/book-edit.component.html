@@ -1,0 +1,89 @@
+
+<div class="content">
+    <form [formGroup]="bookForm" (ngSubmit)="onFormSubmit()" class="example-form">
+    
+        
+            <div fxLayout="row" fxLayoutAlign="space-around center">
+                <mat-form-field >
+                    <mat-label>Title</mat-label>
+                    <input matInput type="text" placeholder="" formControlName="title" required>
+                    <div class="text-danger" *ngIf="bookForm.controls?.['title'].touched">
+                        <mat-error *ngIf="bookForm.controls?.['title'].errors?.['required']">
+                            Dato obligatorio
+                        </mat-error>
+                    </div>
+                </mat-form-field>
+            
+                <mat-form-field class="input-mat-form">
+                    <mat-label>Categoría</mat-label>
+                    <input matInput placeholder="" formControlName="category" required>
+                    <div class="text-danger" *ngIf="bookForm.controls?.['category'].touched">
+                        <mat-error *ngIf="bookForm.controls?.['category'].errors?.['required']">
+                            Dato obligatorio
+                        </mat-error>
+                    </div>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="space-around center">
+                <mat-form-field>
+                    <mat-label>Fecha de publicaci&oacute;n</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="publication_date" required>
+                    <mat-hint>DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <div class="text-danger" *ngIf="bookForm.controls?.['publication_date'].touched">
+                        <mat-error *ngIf="bookForm.controls?.['publication_date'].errors?.['required']">
+                            Dato obligatorio
+                        </mat-error>
+                    </div>
+                </mat-form-field>
+            
+                <mat-form-field>
+                    <mat-label>Autor</mat-label>
+                    <input matInput placeholder="" formControlName="author" required>
+                    <div class="text-danger" *ngIf="bookForm.controls?.['author'].touched">
+                        <mat-error *ngIf="bookForm.controls?.['author'].errors?.['required']">
+                            Dato obligatorio
+                        </mat-error>
+                    </div>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="space-around center">
+                <mat-form-field>
+                    <mat-label>Editorial</mat-label>
+                    <input matInput placeholder="" formControlName="publisher" required>
+                    <div class="text-danger" *ngIf="bookForm.controls?.['publisher'].touched">
+                        <mat-error *ngIf="bookForm.controls?.['publisher'].errors?.['required']">
+                            Dato obligatorio
+                        </mat-error>
+                    </div>
+                </mat-form-field>
+            
+                <mat-form-field>
+                    <mat-label>Imagen de portada</mat-label>
+                    <input matInput placeholder="" formControlName="cover_image" required>
+                    <div class="text-danger" *ngIf="bookForm.controls?.['cover_image'].touched">
+                        <mat-error *ngIf="bookForm.controls?.['cover_image'].errors?.['required']">
+                            Dato obligatorio
+                        </mat-error>
+                    </div>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="space-around center">
+                <mat-form-field>
+                    <mat-label>Resumen</mat-label>
+                    <textarea matInput #summary maxlength="256" placeholder="Escribir un resumen corto" formControlName="summary" required>
+                    </textarea>
+                    <mat-hint align="start"></mat-hint>
+                    <mat-hint align="end">{{summary.value.length}} / 256</mat-hint>
+                    <div class="text-danger" *ngIf="bookForm.controls?.['summary'].touched">
+                        <mat-error *ngIf="bookForm.controls?.['summary'].errors?.['required']">
+                            Dato obligatorio
+                        </mat-error>
+                    </div>
+                </mat-form-field>
+            </div>
+                <button mat-flat-button color="primary" type="submit">Primary</button>
+            
+    </form>
+    </div>

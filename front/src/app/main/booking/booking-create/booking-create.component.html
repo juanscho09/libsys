@@ -1,0 +1,34 @@
+<div mat-dialog-title>
+    <h1>Formulario de pr&eacute;stamos</h1>
+</div>
+
+<form [formGroup]="bookingForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Usuarios</mat-label>
+                <mat-select name="user" formControlName="user">
+                    <mat-option *ngFor="let user of users" [value]="user.id">
+                        {{ user.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Libro</mat-label>
+                <input matInput placeholder="Juan Ch." formControlName="book">
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <div class="text-danger">
+                <mat-error *ngIf="!createBooking">
+                    El libro está prestado, por ende se debe reservar.
+                </mat-error>
+            </div>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-raised-button (click)="cancelCreateBooking()">Cancelar</button>
+        <button *ngIf="createBooking" mat-raised-button color="primary" type="button" (click)="saveLoanBook()">Guardar</button>
+        <button *ngIf="!createBooking" mat-raised-button color="warn" type="button" (click)="saveBooking()">Reservar</button>
+    </div>
+</form>

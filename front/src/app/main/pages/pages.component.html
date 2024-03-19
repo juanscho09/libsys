@@ -1,0 +1,57 @@
+<mat-toolbar >    
+    <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+        <mat-icon *ngIf="!sidenav.opened" >
+            menu
+        </mat-icon>
+        <mat-icon *ngIf="sidenav.opened">
+            close
+        </mat-icon>
+    </button>
+    <span>Biblioteca</span>
+        
+</mat-toolbar>
+
+<mat-sidenav-container class="example-container" >
+    <mat-sidenav class="mat-elevation-z8" #sidenav="matSidenav"  mode="side" opened>
+        <img class="avatar mat-elevation-z8" src="https://media.licdn.com/dms/image/C4D0BAQEwGfuIGjfbSA/company-logo_200_200/0/1675357745707/tec_solutions_network_logo?e=2147483647&v=beta&t=R5954FEuYtVcRhjald-ZTFSVZhSFiZDsP3jqYB6N5w0" alt="">
+        <h4 class="name">Juan Chinga Torres</h4>
+        <p class="designation" >Lic. en sistemas</p>
+
+        <mat-divider></mat-divider>
+        
+        <button mat-button class="menu-button" >
+            <mat-icon>books</mat-icon>
+            <span><a [routerLink]="['book/books']" >Libros</a></span>
+        </button>
+        <button mat-button class="menu-button" >
+            <mat-icon>person</mat-icon>
+            <span><a [routerLink]="['user/users']" >Usuarios</a></span>
+        </button>
+        <button mat-button class="menu-button" >
+            <mat-icon>book_online</mat-icon>
+            <span><a [routerLink]="['booking/bookings']" >Reservas</a></span>
+        </button>
+        <button mat-button class="menu-button" >
+            <mat-icon>library_books</mat-icon>
+            <span><a [routerLink]="['booking/bookLoans']" >Préstamos</a></span>
+        </button>
+        
+        <mat-divider></mat-divider>
+
+        <button type="button" class="btn btn-danger" (click)="logout()">
+            <mat-icon>logout</mat-icon>
+        </button>
+        
+        
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+        <div class="content mat-elevation-z8">
+            <router-outlet></router-outlet>
+        </div>
+
+    </mat-sidenav-content>
+
+
+</mat-sidenav-container>

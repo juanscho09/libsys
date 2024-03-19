@@ -1,0 +1,31 @@
+.example-card {
+    max-width: 250px;
+    margin: 10px;
+}
+
+.example-card-title{
+    color: black;
+}
+
+.example-form-field{
+    margin: 3px;
+}
+
+.example-card-header{
+    height: 30%;
+}
+
+.example-card-image{
+    height: 60%;
+}
+
+.example-card-footer{
+    height: 10%;
+}
+
+.app-wrapper{
+    margin: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
