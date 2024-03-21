@@ -1,93 +1,120 @@
-# libsys
+# LibSys Admin
+
+Sistema para la gestión de biblioteca
+
+## Requisitos
+
+Encontrarás este detalle en el readme del frontend y del backend
+Frontend: Angular
+Backend: Laravel
+Base de Datos: MySql
+Servidor: Apache para laravel, Nginx para angular
+
+## Instalación
+
+1. Clona este repositorio.
+2. Crear el archivo de entorno (.env) desde el archivo de entorno que viene como ejemplo (.env.example) en el proyecto de backend
+    ```
+    cp .env.example .env
+    ```
+3. Completar los datos importantes, tanto de conexión a la base, como del servidor de mail:
+    ```
+    APP_URL=http://127.0.0.1:8080/public/
+
+    DB_CONNECTION=mysql
+    DB_HOST=libsys_mysql
+    DB_PORT=3306
+    DB_DATABASE=libsysdb
+    DB_USERNAME=root
+    DB_PASSWORD=11235813
+
+    MAIL_MAILER=smtp
+    MAIL_HOST=sandbox.smtp.mailtrap.io
+    MAIL_PORT=2525
+    MAIL_USERNAME=1111111
+    MAIL_PASSWORD=0000000
+    MAIL_ENCRYPTION=null
+    MAIL_FROM_ADDRESS="hello@biblioteca.com"
+    MAIL_FROM_NAME="Biblioteca"
+    ```
+    
+    Tener en cuenta que para trabajar con mailtrap, debe obtener una cuenta y podrá ver todos los envíos que se vayan ejecutando.
+    También tener en cuenta que para completar el valor de "DB_HOST", tiene que ver con el nombre dle contenedor de la base de datos, en el caso configurado: libsys_mysql.
+
+4.  En el front lo que se debe configurar es lo siguiente: el archivo environment.prod.ts, debería tener la ruta a la cuál va a     acceder a la api:
+    ```
+    export const environment = {
+        production: true,
+        api: 'http://127.0.0.1:8080/public/api'
+    };
+    ```
+
+5. Crear el archivo .env si no existe en la carpeta raíz. Nuevamente, se puede copiar de .env.example para ver los datos que necesitamos, luego hay que ponerles los datos correctos. Probablemente ya venga con el proyecto, verificar si son los valores correctos:
+    ```
+    PROJECT_NAME=libsys
+
+    MYSQL_PASSWORD=local
+    MYSQL_DB=libsysdb
+    MYSQL_PASS_ROOT=local
+    ```
+6. Correr el comando deploy.sh, ubicado en /docker/bin/, esto va a hacer el build correspondiente, además de levantar el contenedor.
+    ```
+    deploy.sh
+    ```
+7. Correr el comando initback.sh, ubicado también en /docker/bin/, y este se encargará de inicialiar el proyecto, además de la base de datos.
+    ```
+    initback.sh
+    ```
+8. Una vez realizado todo lo anterior, se levantará cada servicio (front y back) en un puerto distinto cada uno:
+    ```
+    Frontend -> http://127.0.0.1:8088
+    Backend -> http://127.0.0.1:8080/public/api
+    ```
+9. Pude usar los siguientes datos para ingresar al sistema:
+    ```
+    usuario: jjct_@hotmail.com
+    password: 11235813
+    ```
 
 
+### Posibles fallos:
+- Puede que cuando este ejecutando el primer comando (deploy.sh), obtenga errores en el proceso del "build", se puede dar ya que la conexión es débil y no permite una descarga completa de las librerías de node_modules. Como solución a esto, volver a ejecutar el código, y no tendrá problemas.
 
-## Getting started
+- Si ejecuta dos veces seguidas el comando de inicializar el proyecto (initback.sh), puede que le de error, ya que hay un usuario que se agrega para que pueda probar el sistema, entonces repetir este comando hará que se quiera agregar este mismo usuario, pero al haber validación a nivel de tablas, donde no puede haber personas con el mismo mail, resultará en la interrupción del comando y no continuará la ejecución, mostrando un error de validación.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+#### Comandos a tener en cuenta de docker:
+- Hará el build:
+    ```
+    docker-compose build
+    ```
+- Levantará el contenedor:
+    ```
+    docker-compose up -d
+    ```
+- Parará el contenedor:
+    ```
+    docker-compose down
+    ```
+- Ver contenedores activos:
+    ```
+    docker ps
+    ```
+- Acceder a un contenedor:
+    ```
+    docker exec -i -t <nombre_contenedor> /bin/bash
+    ```
 
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/jcjcto/libsys.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.com/jcjcto/libsys/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+#### Tener en cuenta si se agrega dominio:
+- Si realiza un cambio de dominio, deberá modificar las rutas tanto acá en el backend, como en la aplicación frontend. 
+    - En backend deberá modificarse lo siguiente:
+        ```
+        APP_URL=http://libsys-back.local
+        ```
+    - En frontend deberá modificarse el archivo environment.prod.ts:
+        ```
+        export const environment = {
+            production: true,
+            api: 'http://libsys-back.local/api/'
+        };
+        ```

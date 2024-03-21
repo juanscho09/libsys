@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api: 'http://sistema_admin/api/'
+  api: 'http://localhost:8080/public/api/'
 };

@@ -1,6 +1,25 @@
 version: "3"
 services:
 
+    # MySQL Service
+    mysql:
+        image: 'mysql/mysql-server:5.7.31'
+        container_name: "${PROJECT_NAME}_mysql"
+        tty: true
+        environment:
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DB}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_PASS_ROOT}
+            MYSQL_ROOT_HOST: '%'
+            SERVICE_NAME: mysql
+        ports: 
+            - '3306:3306'
+        volumes:
+            - ./docker/mysql/dbdata/:/var/lib/mysql-files/
+            - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+        networks:
+            - private
+
     # Backend (PHP)
     back:
         build:
@@ -10,49 +29,31 @@ services:
         tty: true
         environment:
             SERVICE_NAME: back
-        working_dir: /var/www/back
+        working_dir: /var/www/html
         ports:
             - "8080:80"
         volumes:
-            - ./back/:/var/www/back
-            - ./back/public/:/var/www/html
+            - laravel-storage:/var/www/html/storage
         networks:
             - private
+        depends_on:
+            - mysql
 
     # Frontend
-    #front:
-    #    build:
-    #        context: .
-    #        dockerfile: ./docker/front/Dockerfile
-    #    container_name: "${PROJECT_NAME}_front"
-    #    working_dir: /usr/src/app/front
-    #    volumes: 
-    #        - ./front/:/usr/src/app/front 
-    #    ports: 
-    #        - '4200:4200' 
-    #    command: > 
-    #        bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
-    #    networks:
-    #        - private
-
-    # MySQL Service
-    mysql:
-        image: 'mysql/mysql-server:5.7.31'
-        container_name: "${PROJECT_NAME}_mysql"
+    front:
+        build:
+            context: .
+            dockerfile: ./docker/front/Dockerfile
+        container_name: "${PROJECT_NAME}_front"
         tty: true
-        environment:
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DB}
-            MYSQL_ROOT_PASSWORD: ${MYSQL_PASS_ROOT}
-            MYSQL_ROOT_HOST: '%'
-            SERVICE_NAME: mysql
-        volumes:
-            - ./docker/mysql/dbdata/:/var/lib/mysql-files/
-            - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
-        networks:
-            - private
+        ports: 
+            - '8088:80'
+        depends_on:
+            - back
 
+volumes:
+    laravel-storage:
+        driver: local
 networks:
     private:
         driver: bridge

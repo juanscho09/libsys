@@ -1,53 +1,82 @@
 FROM php:8.0.19-apache
 
-RUN apt-get update
-
 # Instalaciones
-RUN apt-get install -y \
-    git \
-    zip \
-    curl \
-    sudo \
-    unzip \
-    libicu-dev \
-    libbz2-dev \
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    default-mysql-client \
     libpng-dev \
-    libjpeg-dev \
-    libmcrypt-dev \
-    libreadline-dev \
+    libjpeg62-turbo-dev \
     libfreetype6-dev \
-    g++
+    locales \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    curl \
+    autoconf \
+    pkg-config \
+    libzip-dev \
+    zlib1g-dev \
+    libssl-dev \
+    libssl-doc \
+    libsasl2-dev \
+    libonig-dev \
+    libcurl4-openssl-dev \
+    ca-certificates
 
-# Configura Apache
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Enable Apache mod_rewrite for URL rewriting
 RUN a2enmod rewrite
 
-# Establece el directorio de trabajo
-WORKDIR /var/www/back
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql zip exif pcntl
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd
 
-# Copia el código fuente de Laravel al contenedor
-COPY . /var/www/back
+# Configure Apache DocumentRoot to point to Laravel's public directory
+# and update Apache configuration files
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# instalar dependencias
-RUN docker-php-ext-install \
-    bz2 \
-    intl \
-    iconv \
-    bcmath \
-    opcache \
-    calendar \
-    mbstring \
-    pdo_mysql
+# Copy the application code
+COPY ./back /var/www/html
 
-# Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Set the working directory
+WORKDIR /var/www/html
 
-# Cambia el propietario del directorio de Laravel
-RUN chown -R www-data:www-data /var/www/back/storage
+RUN rm -rf /var/www/html/vendor
+RUN rm -rf /var/www/html/composer.lock
 
-# Crea un enlace simbólico para el directorio public
-RUN ln -s /var/www/back/public /var/www/html
+# INSTALL COMPOSER
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php && \
+    php -r "unlink('composer-setup.php');" && \
+    mv composer.phar /usr/local/bin/composer
 
-COPY ./vhost.conf /etc/apache2/sites-available/000-default.conf
+# Establecer la variable de entorno COMPOSER_ALLOW_SUPERUSER en true
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Exponer el puerto 80
+# Ejecutar composer install
+RUN composer install --no-interaction --no-scripts
+
+# Install composer
+### RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install project dependencies
+### RUN composer clear-cache
+### RUN composer install
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Copy configuration vhost
+COPY ./docker/apache/vhost.conf /etc/apache2/sites-available/000-default.conf
+
+COPY ./back/.env /var/www/html/.env
+
+# Exponer el puerto 8080
 EXPOSE 8080
